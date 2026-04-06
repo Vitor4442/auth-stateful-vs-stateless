@@ -1,6 +1,9 @@
 server:
   port: ${PORT:8080}
 
+app:
+  token:
+    secret-key: ${JWT_SECRET_KEY:bWFyZ28=}
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
