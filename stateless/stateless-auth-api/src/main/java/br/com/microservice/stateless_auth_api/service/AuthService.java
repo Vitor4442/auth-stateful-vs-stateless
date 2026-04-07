@@ -13,7 +13,8 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @Service
 @AllArgsConstructor
 public class AuthService {
-
+    //to-do crair um meio de criar usuario so com a role
+    //to-do implementar roles
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -21,12 +22,15 @@ public class AuthService {
     public TokenDTO login(AuthRequest request){
         var user = userRepository.findByUsername(request.username())
                 .orElseThrow(() -> new ValidationException("User not found!"));
-        var accessToken = jwtService.createToken(user);
         validationPassword(request.password(), user.getPassword());
+        var accessToken = jwtService.createToken(user);
         return new TokenDTO(accessToken);
     }
 
     private void validationPassword(String rawPassword, String encodedPassword){
+        if(isEmpty(rawPassword)){
+            throw new ValidationException("The password must be informed!");
+        }
         if(!passwordEncoder.matches(rawPassword, encodedPassword)){
             throw new ValidationException("The password is incorrect!");
         }
